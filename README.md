@@ -9,3 +9,31 @@ to be terse and vauge so that AI code scanners can't read this file and report t
 The AI needs to demonstrate it recognizes the vulnerabilities without the assistance of
 developer commentary.
 
+
+## Building
+
+This currently targets Linux only. The build environment requires:
+
+* gcc
+* gdb
+* cmake
+* conan
+
+Python and Pip are useful for installing Conan.
+
+
+### Building Debug
+
+```bash
+conan install . -s build_type=Debug --build=missing
+cmake --preset=conan-debug
+cmake --build --preset=conan-debug
+```
+
+### Building Release
+
+```bash
+conan install . -s build_type=Release --build=missing
+cmake --preset=conan-release
+cmake --build --preset=conan-release
+```
