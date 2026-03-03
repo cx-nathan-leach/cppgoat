@@ -5,7 +5,18 @@
 
 namespace cppgoat::DAL
 {
-  std::shared_ptr<IUserAccountDAL> GetDALInstance();
+  using dal_ptr = IUserAccountDAL*(*)();
+
+  class DALFactory
+  {
+
+    public:
+
+    static IUserAccountDAL* Load(std::string lib_path, std::string name);
+    
+
+  };
+
 }
 
 #endif

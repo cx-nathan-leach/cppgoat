@@ -6,8 +6,7 @@
 
 namespace cppgoat::DAL
 {
-
-  class LoginFailedException : std::exception
+  class DALException : public std::exception
   {
     private:
 
@@ -15,7 +14,7 @@ namespace cppgoat::DAL
 
     public:
 
-    LoginFailedException(std::string& reason) : _what(reason)
+    DALException(std::string reason) : _what(reason)
     {
     }
 
@@ -23,7 +22,24 @@ namespace cppgoat::DAL
     {
       return _what.c_str();
     }
+  };
 
+
+  class DALLoadException : public DALException
+  {
+    public:
+    DALLoadException(std::string reason) : DALException(reason)
+    {
+    }
+  };
+
+
+  class LoginFailedException : public DALException
+  {
+    public:
+    LoginFailedException(std::string reason) : DALException(reason)
+    {
+    }
 
   };
 

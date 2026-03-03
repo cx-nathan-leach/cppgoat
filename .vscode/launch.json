@@ -9,7 +9,7 @@
     "type": "cppdbg",
     "request": "launch",
     "program": "${workspaceFolder}/build/Debug/cppgoat",
-    "args": [],
+    "args": ["-lp", "./build/Debug/DAL"],
     "stopAtEntry": false,
     "cwd": "${workspaceFolder}",
     "environment": [],

@@ -3,12 +3,22 @@
 #include "user_dal.hpp"
 #include "sqlite3.h"
 
-namespace cppgoat::DAL
+namespace cppgoat::DAL::sqlite3
 {
-  class SqliteDAL : public cppgoat::DAL::IUserAccountDAL
+  
+  #define CREATE_USERS_TABLE \
+    "CREATE TABLE IF NOT EXISTS users (username PRIMARY KEY, password)"
+
+    class SqliteDAL : public cppgoat::DAL::IUserAccountDAL
   {
     private:
-      sqlite3 *_db;
+      ::sqlite3 *_db;
+
+    static void throw_sqlite_err_msg(char* msg);
+    static int validate_callback(void*, int, char**, char**);
+
+    static std::string quote(std::string unquoted);
+
     public:
     SqliteDAL();
 

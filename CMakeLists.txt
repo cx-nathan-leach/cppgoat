@@ -3,6 +3,7 @@ project(cppgoat)
 
 add_executable(cppgoat)
 add_subdirectory(DAL)
+add_subdirectory(DAL/sqlite)
 
 
 target_sources(cppgoat PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/main.cc")
