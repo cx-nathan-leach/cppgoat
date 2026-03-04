@@ -46,8 +46,9 @@ namespace cppgoat::DAL
   class IUserAccountDAL
   {
     public:
-    virtual bool ValidateLogin(const std::string& username, const std::string& password)=0;
-    virtual bool CreateUser(const std::string& username, const std::string& password)=0;
+    virtual bool ValidateLogin(const std::string& email, const std::string& password)=0;
+    virtual bool CreateUser(const std::string& email, const std::string& username, const std::string& password)=0;
+    virtual std::string LoadUser(const std::string& email)=0;
     virtual ~IUserAccountDAL() = default;
 
   };

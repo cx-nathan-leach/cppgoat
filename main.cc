@@ -16,8 +16,12 @@ std::shared_ptr<argparse::ArgumentParser> get_args(int argc, char** argv)
     .help("The name of the database abstraction layer to load.")
     .default_value<std::string>({"sqlite"});
     
-  parser->add_argument("-lp", "--load_path")
+  parser->add_argument("-lp", "--load-path")
     .help("The root path for DALs.")
+    .default_value<std::string>({"."});
+
+  parser->add_argument("-c", "--content-path")
+    .help("The root path for content files.")
     .default_value<std::string>({"."});
 
   parser->parse_args(argc, argv);
@@ -29,8 +33,8 @@ std::shared_ptr<argparse::ArgumentParser> get_args(int argc, char** argv)
 int main(int argc, char** argv)
 {
   auto args = get_args(argc, argv);
-  auto dal_ptr = cppgoat::DAL::DALFactory::Load(args->get<std::string>("load_path"), args->get<std::string>("dal"));
-  cppgoat::server::GoatServer server(dal_ptr, args->get<int>("port"));
+  auto dal_ptr = cppgoat::DAL::DALFactory::Load(args->get<std::string>("load-path"), args->get<std::string>("dal"));
+  cppgoat::server::GoatServer server(dal_ptr, args->get<int>("port"), args->get<std::string>("content-path"));
   server.serve_forever();
   return 0;
 }

@@ -60,11 +60,37 @@ namespace cppgoat::DAL::sqlite3
       return SQLITE_OK;
     }
 
-
-    bool SqliteDAL::ValidateLogin(const std::string& username, const std::string& password)
+    int SqliteDAL::load_user_callback(void* name_out_ptr, int cols, char** col_vals, char** col_names)
     {
-      std::string sql_query = std::string("SELECT password FROM users WHERE username='") + 
-        quote(username) + std::string(";");
+      auto name_out = reinterpret_cast<std::string*>(name_out_ptr);
+
+      (*name_out) = col_vals[0];
+
+      return SQLITE_OK;
+    }
+
+    std::string SqliteDAL::LoadUser(const std::string& email)
+    {
+      std::string sql_query = std::string("SELECT username FROM users WHERE email=") + 
+        quote(email) + std::string(";");
+
+      char* msg;
+
+      std::string loaded_name;
+
+      auto result = sqlite3_exec(_db, sql_query.c_str(), load_user_callback, &loaded_name, &msg);
+
+      if (result != SQLITE_OK)
+        throw_sqlite_err_msg(msg);
+
+      return loaded_name;
+
+    }
+
+    bool SqliteDAL::ValidateLogin(const std::string& email, const std::string& password)
+    {
+      std::string sql_query = std::string("SELECT password FROM users WHERE email=") + 
+        quote(email) + std::string(";");
 
       char* msg;
 
@@ -78,10 +104,10 @@ namespace cppgoat::DAL::sqlite3
       return password == loaded_password;
     }
     
-    bool SqliteDAL::CreateUser(const std::string& username, const std::string& password)
+    bool SqliteDAL::CreateUser(const std::string& email, const std::string& username, const std::string& password)
     {
-      std::string sql_query = std::string("INSERT INTO users (username, password) VALUES (") + 
-        quote(username) + std::string(",") + quote(password) + std::string(");");
+      std::string sql_query = std::string("INSERT INTO users (email, username, password) VALUES (") + 
+        quote(email) + std::string(",") + quote(username) + std::string(",") + quote(password) + std::string(");");
 
       char* msg;
       auto result = sqlite3_exec(_db, sql_query.c_str(), NULL, NULL, &msg);
