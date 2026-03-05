@@ -22,6 +22,7 @@ Vulnerabilities will include (but may not be limited to):
 * SQL Injection
 * Path Traversal
 * Information Disclosure
+* Secret leaks
 * Stored XSS
 * Authentication Bypass
 * Command Injection
