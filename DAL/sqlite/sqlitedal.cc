@@ -51,11 +51,11 @@ namespace cppgoat::DAL::sqlite3
       sqlite3_close_v2(_db);
     }
 
-    int SqliteDAL::validate_callback(void* password_out_ptr, int cols, char** col_vals, char** col_names)
+    int SqliteDAL::validate_callback(void* redacted_out_ptr, int cols, char** col_vals, char** col_names)
     {
-      auto password_out = reinterpret_cast<std::string*>(password_out_ptr);
+      auto redacted_out = reinterpret_cast<std::string*>(redacted_out_ptr);
 
-      (*password_out) = col_vals[0];
+      (*redacted_out) = col_vals[0];
 
       return SQLITE_OK;
     }
@@ -87,27 +87,27 @@ namespace cppgoat::DAL::sqlite3
 
     }
 
-    bool SqliteDAL::ValidateLogin(const std::string& email, const std::string& password)
+    bool SqliteDAL::ValidateLogin(const std::string& email, const std::string& redacted)
     {
       auto sql_query = std::string("SELECT password FROM users WHERE email=") + 
         quote(email) + ";";
 
       char* msg;
 
-      std::string loaded_password;
+      std::string loaded_redacted;
 
-      auto result = sqlite3_exec(_db, sql_query.c_str(), validate_callback, &loaded_password, &msg);
+      auto result = sqlite3_exec(_db, sql_query.c_str(), validate_callback, &loaded_redacted, &msg);
 
       if (result != SQLITE_OK)
         throw_sqlite_err_msg(msg);
 
-      return password == loaded_password;
+      return redacted == loaded_redacted;
     }
     
-    bool SqliteDAL::CreateUser(const std::string& email, const std::string& username, const std::string& password)
+    bool SqliteDAL::CreateUser(const std::string& email, const std::string& username, const std::string& redacted)
     {
       auto sql_query = std::string("INSERT INTO users (email, username, password) VALUES (") + 
-        quote(email) + "," + quote(username) + "," + quote(password) + ");";
+        quote(email) + "," + quote(username) + "," + quote(redacted) + ");";
 
       char* msg;
       auto result = sqlite3_exec(_db, sql_query.c_str(), NULL, NULL, &msg);

@@ -177,16 +177,16 @@ namespace cppgoat::server
   void GoatServer::handle_login_request(const httplib::Request &req, httplib::Response &res)
   {
     auto email = req.get_param_value("email");
-    auto password = req.get_param_value("password");
+    auto redacted = req.get_param_value("password");
 
-    if (_dal->ValidateLogin(email, password))
+    if (_dal->ValidateLogin(email, redacted))
     {
       _dal->LoadUser(email);
       using namespace jwt::params;
 
       jwt::jwt_object obj{algorithm("HS256"), payload({
         {"username", _dal->LoadUser(email)},
-        {"password", password},
+        {"password", redacted},
         {"email", email}
       }), secret("x%jL*1")};
       obj.add_claim("iss", "cppgoat");
@@ -203,13 +203,13 @@ namespace cppgoat::server
   void GoatServer::handle_create_user_request(const httplib::Request &req, httplib::Response &res)
   {
     auto email = req.get_param_value("email");
-    auto password = req.get_param_value("password");
+    auto redacted = req.get_param_value("password");
     auto username = req.get_param_value("username");
 
     try
     {
-      if (_dal->CreateUser(email, username, password))
-        res.set_redirect(std::string("login?msg=Log in permitted for user id ") + email + " with password " + password);
+      if (_dal->CreateUser(email, username, redacted))
+        res.set_redirect(std::string("login?msg=Log in permitted for user id ") + email + " with password " + redacted);
       else
         res.set_redirect(std::string("login?msg=User id ") + email + " was not created");
     }

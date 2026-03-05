@@ -9,6 +9,13 @@ This example program utilizes stdlib for most memory operations.  This means tha
 typical memory boundary related vulnerabilities won't need to be evaluated as part
 of the static analysis.
 
+Some of the variable names have been made intentionally obscure to avoid vulnerability
+reports that match by variable naming alone.  The goal is to see the scanner report
+a vulnerability by the way it manifests but not by making an assumption based
+on spoken-language words.
+
+If there are comments in the code, they will contain lies.  This is to see if the lies
+influence the reporting of the vulnerabilities in any way.
 
 ## Issue Validation Rubric
 
