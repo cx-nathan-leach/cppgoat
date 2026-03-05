@@ -2,6 +2,7 @@
 #include <iostream>
 #include <chrono>
 #include "jwt/jwt.hpp"
+#include "boost/tokenizer.hpp"
 
 namespace cppgoat::server
 {
@@ -32,7 +33,10 @@ namespace cppgoat::server
       if (!this->is_authenticated(req))
         res.set_redirect("/login");
       else
-        res.set_content("APP PLACEHOLDER", "text/plain");
+      {
+        auto path = std::filesystem::path(_content) /= "app.html";
+        res.set_file_content(path);
+      }
     });
 
     _svr.Get("/logout", [&](const auto &req, auto &res){
@@ -41,6 +45,9 @@ namespace cppgoat::server
     });
 
 
+    _svr.Post("/encode", [&](const auto &req, auto &res){
+      this->handle_encode_request(req, res);
+    });
 
     _svr.Post("/login", [&](const auto &req, auto &res){
       this->handle_login_request(req, res);
@@ -79,7 +86,41 @@ namespace cppgoat::server
   {
     auto cookies = req.get_header_value("Cookie");
 
-    return false;
+    auto sc = boost::char_separator<char>(";");
+    auto eq = boost::char_separator<char>("=");
+
+    boost::tokenizer<boost::char_separator<char>> cookie_kv (cookies, sc);
+
+    bool found = false;
+    std::string token;
+
+    for (auto cur=cookie_kv.begin(); cur != cookie_kv.end(); cur++)
+    {
+      if (found)
+        break;
+
+      boost::tokenizer<boost::char_separator<char>> cookie (*cur, eq);
+
+      for(auto cur_c = cookie.begin(); cur_c != cookie.end(); cur_c++)
+      {
+        if (found)
+        {
+          token = *cur_c;
+          break;
+        }
+
+        if (*cur_c == "auth_token")
+          found = true;
+      }
+    }
+
+    if (!found)
+      return false;
+
+    using namespace jwt::params;
+    auto dec_obj = jwt::decode(token, algorithms({"HS256"}), secret("x%jL*1"));
+
+    return dec_obj.payload().has_claim_with_value("authenticated", "true");
   }
 
   bool GoatServer::redirecting_authenticated_user(const httplib::Request &req, httplib::Response &res)
@@ -107,13 +148,13 @@ namespace cppgoat::server
   void GoatServer::log(const httplib::Request &req, const httplib::Response &res)
   {
     using namespace std;
-    cout << "INFO " << get_request_log_str(&req) << endl;
+    cout << "[INFO] " << get_request_log_str(&req) << endl;
   }
 
   void GoatServer::log(const httplib::Error& err, const httplib::Request* req)
   {
     using namespace std;
-    cerr << "ERROR " << get_request_log_str(req) << ": " << err << endl;
+    cerr << "[ERROR] " << get_request_log_str(req) << ": " << err << endl;
   }
 
   void GoatServer::serve_forever()
@@ -177,7 +218,7 @@ namespace cppgoat::server
     }
   }
 
-  void GoatServer::handle_urlencode_request(const httplib::Request &req, httplib::Response &res)
+  void GoatServer::handle_encode_request(const httplib::Request &req, httplib::Response &res)
   {
 
   }

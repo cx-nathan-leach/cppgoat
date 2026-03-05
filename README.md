@@ -1,6 +1,14 @@
 # C++ Goat
 An intentionally vulnerable web application with the backend written in C++.
 
+While it is unlikely that anyone would create a web application with a C++ backend,
+the vulnerability patterns are the same as any language.  The intent is to evaluate
+how static analysis tools recognize these patterns in C++.
+
+This example program utilizes stdlib for most memory operations.  This means that
+typical memory boundary related vulnerabilities won't need to be evaluated as part
+of the static analysis.
+
 
 ## Issue Validation Rubric
 

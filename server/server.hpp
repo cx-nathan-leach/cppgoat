@@ -26,7 +26,7 @@ namespace cppgoat::server
     void handle_file_request(const httplib::Request &req, httplib::Response &res);
     void handle_login_request(const httplib::Request &req, httplib::Response &res);
     void handle_create_user_request(const httplib::Request &req, httplib::Response &res);
-    void handle_urlencode_request(const httplib::Request &req, httplib::Response &res);
+    void handle_encode_request(const httplib::Request &req, httplib::Response &res);
     bool redirecting_authenticated_user(const httplib::Request &req, httplib::Response &res);
     bool is_authenticated(const httplib::Request &req);
 
