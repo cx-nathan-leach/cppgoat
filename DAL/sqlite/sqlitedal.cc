@@ -71,8 +71,8 @@ namespace cppgoat::DAL::sqlite3
 
     std::string SqliteDAL::LoadUser(const std::string& email)
     {
-      std::string sql_query = std::string("SELECT username FROM users WHERE email=") + 
-        quote(email) + std::string(";");
+      auto sql_query = std::string("SELECT username FROM users WHERE email=") + 
+        quote(email) + ";";
 
       char* msg;
 
@@ -89,8 +89,8 @@ namespace cppgoat::DAL::sqlite3
 
     bool SqliteDAL::ValidateLogin(const std::string& email, const std::string& password)
     {
-      std::string sql_query = std::string("SELECT password FROM users WHERE email=") + 
-        quote(email) + std::string(";");
+      auto sql_query = std::string("SELECT password FROM users WHERE email=") + 
+        quote(email) + ";";
 
       char* msg;
 
@@ -106,8 +106,8 @@ namespace cppgoat::DAL::sqlite3
     
     bool SqliteDAL::CreateUser(const std::string& email, const std::string& username, const std::string& password)
     {
-      std::string sql_query = std::string("INSERT INTO users (email, username, password) VALUES (") + 
-        quote(email) + std::string(",") + quote(username) + std::string(",") + quote(password) + std::string(");");
+      auto sql_query = std::string("INSERT INTO users (email, username, password) VALUES (") + 
+        quote(email) + "," + quote(username) + "," + quote(password) + ");";
 
       char* msg;
       auto result = sqlite3_exec(_db, sql_query.c_str(), NULL, NULL, &msg);
@@ -120,8 +120,8 @@ namespace cppgoat::DAL::sqlite3
     
     void SqliteDAL::DeleteUser(const std::string& email)
     {
-      std::string sql_query = std::string("DELETE FROM users WHERE email=") + 
-        quote(email) + std::string(";");
+      auto sql_query = std::string("DELETE FROM users WHERE email=") + 
+        quote(email) + ";";
 
       char* msg;
 
