@@ -17,6 +17,16 @@ to be terse and vauge so that AI code scanners can't read this file and report t
 The AI needs to demonstrate it recognizes the vulnerabilities without the assistance of
 developer commentary.
 
+Vulnerabilities will include (but may not be limited to):
+
+* SQL Injection
+* Path Traversal
+* Information Disclosure
+* Stored XSS
+* Authentication Bypass
+* Command Injection
+* Insecure Data Storage
+
 
 ## Building
 

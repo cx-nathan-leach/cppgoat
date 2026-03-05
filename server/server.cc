@@ -1,5 +1,7 @@
 #include "server.hpp"
 #include <iostream>
+#include <cstdlib>
+#include <fstream>
 #include <chrono>
 #include "jwt/jwt.hpp"
 #include "boost/tokenizer.hpp"
@@ -220,8 +222,20 @@ namespace cppgoat::server
 
   void GoatServer::handle_encode_request(const httplib::Request &req, httplib::Response &res)
   {
+    auto payload = req.get_param_value("payload");
 
+    if (std::system((std::string("echo '") + payload + "' | base64 > out.txt 2>&1").c_str()) != 0)
+    {
+      res.set_content("Error encountered when executing the encoding.", "text/plain");
+      res.status = httplib::StatusCode::InternalServerError_500;
+    }
+    else
+    {
+      std::stringbuf out;
+      std::ifstream("out.txt") >> &out; 
+
+      res.set_content(out.str(), "text/plain");
+    }
   }
-
 
 }
