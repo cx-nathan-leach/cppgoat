@@ -26,6 +26,8 @@ namespace cppgoat::DAL::sqlite3
     virtual bool ValidateLogin(const std::string& email, const std::string& password);
     virtual bool CreateUser(const std::string& email, const std::string& username, const std::string& password);
     virtual std::string LoadUser(const std::string& email);
+    virtual void DeleteUser(const std::string& email);
+
     virtual ~SqliteDAL();
 
   };

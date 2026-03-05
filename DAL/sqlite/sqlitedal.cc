@@ -117,5 +117,19 @@ namespace cppgoat::DAL::sqlite3
       
       return true;
     }
+    
+    void SqliteDAL::DeleteUser(const std::string& email)
+    {
+      std::string sql_query = std::string("DELETE FROM users WHERE email=") + 
+        quote(email) + std::string(";");
+
+      char* msg;
+
+      auto result = sqlite3_exec(_db, sql_query.c_str(), NULL, NULL, &msg);
+
+      if (result != SQLITE_OK)
+        throw_sqlite_err_msg(msg);
+    }
+
 
 }
